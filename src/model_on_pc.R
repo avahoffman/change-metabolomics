@@ -215,14 +215,14 @@ model_first_three_pcs <- function() {
   # PC2
   fit <-
     compile_and_fit_normal_model(dat, responsevar = dat$PC2)
-  plot_main_effects(fit, name = "PC1")
+  plot_main_effects(fit, name = "PC2")
   write_model_statistics(fit, name = "PC2")
   plot_posterior_checks(fit, responsevar = dat$PC2, name = "PC2")
   
   # PC3
   fit <-
     compile_and_fit_normal_model(dat, responsevar = dat$PC3)
-  plot_main_effects(fit, name = "PC1")
+  plot_main_effects(fit, name = "PC3")
   write_model_statistics(fit, name = "PC3")
   plot_posterior_checks(fit, responsevar = dat$PC3, name = "PC3")
   
