@@ -14,6 +14,7 @@ source("src/utils.R")
 # Specific functions
 source("src/clean.R")
 source("src/pca.R")
+source("src/plot_traits.R")
 
 ###########################################################################################
 # Run pipeline
@@ -21,3 +22,5 @@ source("src/pca.R")
 clean_design_and_metabolites()
 plot_pca(run_pca(),
          filename = "figures/component_v_N.pdf")
+
+arrange_phys_plots()
