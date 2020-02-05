@@ -40,3 +40,6 @@ vignettes/*.pdf
 
 # Mac DS Store
 *.DS_Store
+
+# Large Stan results
+*output/stanmodel*
