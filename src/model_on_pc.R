@@ -150,13 +150,13 @@ write_model_statistics <- function(fit, name) {
     min_ <- min(Pr_vals[r,])
     # Calculate the proportion of overlap on zero
     if (max_ < 0 & min_ < 0) {
-      pr. <- 0
+      pr. <- 1
     } else if (max_ > 0 & min_ > 0) {
-      pr. <- 0
+      pr. <- 1
     } else if (abs(max_) > abs(min_)) {
-      pr. <- abs(min_) / (abs(min_) + abs(max_))
-    } else if (abs(max_) < abs(min_)) {
       pr. <- abs(max_) / (abs(min_) + abs(max_))
+    } else if (abs(max_) < abs(min_)) {
+      pr. <- abs(min_) / (abs(min_) + abs(max_))
     } else {
       pr. <- "NA"
     }
