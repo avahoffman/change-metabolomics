@@ -10,8 +10,9 @@
 # Load libraries
 library(dplyr)
 ## note: sva is a bioconductor package, and there may be other dependencies
-# source("https://bioconductor.org/biocLite.R")
-# biocLite("sva")
+# if (!requireNamespace("BiocManager", quietly = TRUE))
+#   install.packages("BiocManager")
+# BiocManager::install(c("sva"))
 library(sva) ## batch correction on raw data
 
 
