@@ -16,6 +16,7 @@ source("src/utils.R")
 source("src/clean.R")
 source("src/pca.R")
 source("src/plot_traits.R")
+source("src/plot_cover.R")
 source("src/model_on_pc.R")
 source("src/model_on_phys.R")
 
@@ -36,3 +37,6 @@ model_phys()
 
 # Phys plots against N
 arrange_phys_plots()
+
+# Cover against N
+plot_nitrogen_and_cover(filename = "figures/cover_v_N.pdf")

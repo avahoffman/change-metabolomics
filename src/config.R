@@ -13,9 +13,11 @@ pca_yaxis <- "PC1 (59%)"
 
 bogr_color <- "#1b9e77"
 spco_color <- "#d95f02"
+elel_color <- "#7570b3"
 
 bogr_shape <- 16
 spco_shape <- 8
+elel_shape <- 3
 
 B.gracilis <- expression(italic("B. gracilis"))
 E.elymoides <- expression(italic("E. elymoides"))

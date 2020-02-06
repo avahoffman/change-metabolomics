@@ -247,11 +247,11 @@ write_model_statistics_mixture <- function(fit, name) {
   print("Calculating and writing Pr values..")
   # Retain only stats for parameters
   Pr_vals <-
-    rbind(model_stats1["intercept[1]", ],
-          model_stats1["intercept[2]", ],
-          model_stats1["B1", ],
-          model_stats1["B2", ],
-          model_stats1["B3", ])
+    rbind(model_stats["intercept[1]", ],
+          model_stats["intercept[2]", ],
+          model_stats["B1", ],
+          model_stats["B2", ],
+          model_stats["B3", ])
   Pr_vals <- Pr_vals[,-4] # Drop rhat for calculating Pr
   Pr_calc <- as.data.frame(NULL)
   # Iterate through parameters
