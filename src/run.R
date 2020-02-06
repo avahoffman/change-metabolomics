@@ -3,8 +3,8 @@
 ###########################################################################################
 # Set working directory for the repository (should be the git repo):
 wd <-
-  # "/Users/hoffman ava/change-metabolomics/"
-"/Users/avahoffman/Dropbox/Research/SGS_Metabolomics/Change_2016-17_Nate/change-metabolomics/"
+   "/Users/hoffman ava/change-metabolomics/"
+# "/Users/avahoffman/Dropbox/Research/SGS_Metabolomics/Change_2016-17_Nate/change-metabolomics/"
 
 setwd(wd)
 
@@ -16,12 +16,23 @@ source("src/utils.R")
 source("src/clean.R")
 source("src/pca.R")
 source("src/plot_traits.R")
+source("src/model_on_pc.R")
+source("src/model_on_phys.R")
 
 ###########################################################################################
 # Run pipeline
 
+# Clean data
 clean_design_and_metabolites()
-plot_pca(run_pca(),
-         filename = "figures/component_v_N.pdf")
 
+# Run PCA and plot
+plot_pca(run_pca(), filename = "figures/component_v_N.pdf")
+
+# Bayes model for PCs
+model_first_three_pcs()
+
+# Bayes models for phys
+model_phys()
+
+# Phys plots against N
 arrange_phys_plots()

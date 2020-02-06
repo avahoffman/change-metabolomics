@@ -11,17 +11,6 @@ library(gridExtra)
 
 ###########################################################################################
 
-
-prep_trait_data <- function(){
-  phys_data <- 
-    read.csv("data/clean_SpecAbund_design.csv") %>%
-    filter(!(is.na(photo))) %>%
-    filter(!(X == "A2_Bogr")) %>% # all zeros, not helpful datapoint
-    mutate(iWUE = photo / Trmmol) # generate new variable for water use efficiency
-  return(phys_data)
-}
-
-
 phys_plot <-
   function(phys_data,
            trait,
@@ -99,11 +88,6 @@ phys_plot <-
     
     return(gg)
   }
-
-phys_plot(prep_trait_data(), trait = "photo", ylab = photo_ylab, grid_label = "(a)", fit_line = T)
-phys_plot(prep_trait_data(), trait = "cond", ylab = cond_ylab, grid_label = "(b)")
-phys_plot(prep_trait_data(), trait = "Ci", ylab = ci_ylab, grid_label = "(c)")
-phys_plot(prep_trait_data(), trait = "iWUE", ylab = iWUE_ylab, grid_label = "(d)")
 
 
 g_legend <- function(a.gplot) {
