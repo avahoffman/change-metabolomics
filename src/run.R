@@ -19,6 +19,7 @@ source("src/plot_traits.R")
 source("src/plot_cover.R")
 source("src/model_on_pc.R")
 source("src/model_on_phys.R")
+source("src/model_on_cover.R")
 
 ###########################################################################################
 # Run pipeline
@@ -34,6 +35,9 @@ model_first_three_pcs()
 
 # Bayes models for phys
 model_phys()
+
+# Bayes models for cover
+model_cover()
 
 # Phys plots against N
 arrange_phys_plots()

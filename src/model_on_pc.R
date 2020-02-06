@@ -7,6 +7,7 @@
 # Load libraries
 library(rstan) # Bayesian model compiler and sampler
 options(mc.cores = parallel::detectCores()) # option to make Stan parallelize
+rstan_options(auto_write = TRUE)
 library(bayesplot) # Plots of mcmc output
 
 
@@ -71,7 +72,8 @@ compile_and_fit_pc_normal_model <-
       list(
         'N' = nrow(df),
         'PC' = responsevar,
-        'spp' = as.numeric(df$spp) - 1, # Want zeros and ones for species
+        'spp' = as.numeric(df$spp) - 1,
+        # Want zeros and ones for species
         'Nit' = df$nitrogen
       )
     # Perform MCMC sampling
@@ -96,23 +98,35 @@ model_first_three_pcs <- function() {
   
   # PC1
   fit <-
-    compile_and_fit_pc_normal_model(dat, responsevar = dat$PC1)
+    compile_and_fit_pc_normal_model(dat, 
+                                    responsevar = dat$PC1, 
+                                    iter = iter)
   plot_main_effects(fit, name = "PC1")
   write_model_statistics(fit, name = "PC1")
-  plot_posterior_checks(fit, responsevar = dat$PC1, name = "PC1")
+  plot_posterior_checks(fit, 
+                        responsevar = dat$PC1, 
+                        name = "PC1")
   
   # PC2
   fit <-
-    compile_and_fit_pc_normal_model(dat, responsevar = dat$PC2)
+    compile_and_fit_pc_normal_model(dat, 
+                                    responsevar = dat$PC2, 
+                                    iter = iter)
   plot_main_effects(fit, name = "PC2")
   write_model_statistics(fit, name = "PC2")
-  plot_posterior_checks(fit, responsevar = dat$PC2, name = "PC2")
+  plot_posterior_checks(fit, 
+                        responsevar = dat$PC2, 
+                        name = "PC2")
   
   # PC3
   fit <-
-    compile_and_fit_pc_normal_model(dat, responsevar = dat$PC3)
+    compile_and_fit_pc_normal_model(dat, 
+                                    responsevar = dat$PC3, 
+                                    iter = iter)
   plot_main_effects(fit, name = "PC3")
   write_model_statistics(fit, name = "PC3")
-  plot_posterior_checks(fit, responsevar = dat$PC3, name = "PC3")
+  plot_posterior_checks(fit, 
+                        responsevar = dat$PC3, 
+                        name = "PC3")
   
 }

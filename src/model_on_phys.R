@@ -1,21 +1,21 @@
 ##
 ## effects SPECIES AND NITROGEN on physiology
+## Keep in mind, recommended lawn application is about 5g/m2 of Nitrogen!
 ##
 ###########################################################################################
 ###########################################################################################
 # Load libraries
 library(rstan) # Bayesian model compiler and sampler
 options(mc.cores = parallel::detectCores()) # option to make Stan parallelize
+rstan_options(auto_write = TRUE)
 library(bayesplot) # Plots of mcmc output
 
 
 ###########################################################################################
 
 
-phys_data <- prep_trait_data()
-
-compile_and_fit_phys_mixture_model <- 
-  function(df, responsevar, iter = 100000){
+compile_and_fit_phys_mixture_model <-
+  function(df, responsevar, iter = 100000) {
     ## Bayesian mixture model for bimodal distributions
     
     #Stan model
@@ -64,15 +64,17 @@ compile_and_fit_phys_mixture_model <-
     "
     
     # Compile model
-    comp.mixture <- stan_model(model_code = phys_model_mixture, 
+    comp.mixture <- stan_model(model_code = phys_model_mixture,
                                model_name = 'phys.model.mixture')
     
     # Select data
     modeldat <- list(
       'N' = nrow(df),
-      'K' = 2, # Number of peaks in multimodal distribution
+      'K' = 2,
+      # Number of peaks in multimodal distribution
       'phys' = responsevar,
-      'spp' = as.numeric(df$spp) - 1,  # Want zeros and ones for species
+      'spp' = as.numeric(df$spp) - 1,
+      # Want zeros and ones for species
       'Nit' = df$nitrogen
     )
     # Perform MCMC sampling
@@ -86,11 +88,11 @@ compile_and_fit_phys_mixture_model <-
         chains = 2
       )
     return(fit)
-}
+  }
 
 
 compile_and_fit_phys_normal_model <-
-  function(df, responsevar, iter = 100000){
+  function(df, responsevar, iter = 100000) {
     ## Bayesian model for normal distributions
     
     # Stan model
@@ -133,14 +135,15 @@ compile_and_fit_phys_normal_model <-
     "
     
     # Compile model
-    comp.normal <- stan_model(model_code = phys_model_normal, 
-                               model_name = 'phys.model.normal')
+    comp.normal <- stan_model(model_code = phys_model_normal,
+                              model_name = 'phys.model.normal')
     
     # Select data
     modeldat <- list(
       'N' = nrow(df),
       'phys' = responsevar,
-      'spp' = as.numeric(df$spp) - 1,  # Want zeros and ones for species
+      'spp' = as.numeric(df$spp) - 1,
+      # Want zeros and ones for species
       'Nit' = df$nitrogen
     )
     # Perform MCMC sampling
@@ -154,11 +157,11 @@ compile_and_fit_phys_normal_model <-
         chains = 2
       )
     return(fit)
-}
+  }
 
 
-compile_and_fit_phys_gamma_model <- 
-  function(df, responsevar, iter = 100000){
+compile_and_fit_phys_gamma_model <-
+  function(df, responsevar, iter = 100000) {
     ## Bayesian model for gamma distributions
     
     # Stan model
@@ -205,14 +208,15 @@ compile_and_fit_phys_gamma_model <-
     "
     
     # Compile model
-    comp.gamma <- stan_model(model_code = phys_model_gamma, 
-                              model_name = 'phys.model.gamma')
+    comp.gamma <- stan_model(model_code = phys_model_gamma,
+                             model_name = 'phys.model.gamma')
     
     # Select data
     modeldat <- list(
       'N' = nrow(df),
       'phys' = responsevar,
-      'spp' = as.numeric(df$spp) - 1,  # Want zeros and ones for species
+      'spp' = as.numeric(df$spp) - 1,
+      # Want zeros and ones for species
       'Nit' = df$nitrogen
     )
     # Perform MCMC sampling
@@ -226,56 +230,8 @@ compile_and_fit_phys_gamma_model <-
         chains = 2
       )
     return(fit)
-     
-}
-
-
-write_model_statistics_mixture <- function(fit, name) {
-  ## gather 95% CIs
-  print("Calculating model statistics..")
-  model_stats <-
-    cbind(
-      summary(fit)$summary[, 1, drop = F],
-      summary(fit)$summary[, 4, drop = F],
-      summary(fit)$summary[, 8, drop = F],
-      summary(fit)$summary[, 10, drop = F]
-    )
-  write.csv(model_stats,
-            file = paste("output/stanmodel_results_", name, "_stats.csv", sep = ""))
-  
-  ## Pr values
-  print("Calculating and writing Pr values..")
-  # Retain only stats for parameters
-  Pr_vals <-
-    rbind(model_stats["intercept[1]", ],
-          model_stats["intercept[2]", ],
-          model_stats["B1", ],
-          model_stats["B2", ],
-          model_stats["B3", ])
-  Pr_vals <- Pr_vals[,-4] # Drop rhat for calculating Pr
-  Pr_calc <- as.data.frame(NULL)
-  # Iterate through parameters
-  for (r in 1:nrow(Pr_vals)) {
-    max_ <- max(Pr_vals[r,])
-    min_ <- min(Pr_vals[r,])
-    # Calculate the proportion of overlap on zero
-    if (max_ < 0 & min_ < 0) {
-      pr. <- 1
-    } else if (max_ > 0 & min_ > 0) {
-      pr. <- 1
-    } else if (abs(max_) > abs(min_)) {
-      pr. <- abs(max_) / (abs(min_) + abs(max_))
-    } else if (abs(max_) < abs(min_)) {
-      pr. <- abs(min_) / (abs(min_) + abs(max_))
-    } else {
-      pr. <- "NA"
-    }
-    Pr_calc[1, r] <- pr.
+    
   }
-  c("intercept[1]", "intercept[2]", "B1", "B2", "B3")
-  write.csv(Pr_calc,
-            file = paste("output/stanmodel_results_", name, "_pr.csv", sep = ""))
-}
 
 
 model_phys <- function() {
@@ -285,86 +241,67 @@ model_phys <- function() {
   
   # Photosynthetic rate - data are normal/mixture
   fit <-
-    compile_and_fit_phys_mixture_model(dat, responsevar = dat$photo)
+    compile_and_fit_phys_mixture_model(dat,
+                                       responsevar = dat$photo,
+                                       iter = iter)
   plot_main_effects(fit, name = "photo")
-  write_model_statistics_mixture(fit, name = "photo")
-  plot_posterior_checks(fit, responsevar = dat$photo, name = "photo")
+  write_model_statistics(fit, name = "photo", mixture = T)
+  plot_posterior_checks(fit,
+                        responsevar = dat$photo,
+                        name = "photo")
   
   # Stomatal conductance - data are gamma
   fit <-
-    compile_and_fit_phys_gamma_model(dat, responsevar = dat$cond + 1)
+    compile_and_fit_phys_gamma_model(dat,
+                                     responsevar = dat$cond + 1,
+                                     iter = iter)
   plot_main_effects(fit, name = "cond")
   write_model_statistics(fit, name = "cond")
-  plot_posterior_checks(fit, responsevar = dat$photo + 1, name = "cond")
+  plot_posterior_checks(fit,
+                        responsevar = dat$cond + 1,
+                        name = "cond")
   
   # Intercellular CO2 - data are normal/mixture
   fit <-
-    compile_and_fit_phys_mixture_model(dat, responsevar = dat$Ci)
+    compile_and_fit_phys_mixture_model(dat,
+                                       responsevar = dat$Ci,
+                                       iter = iter)
   plot_main_effects(fit, name = "Ci")
-  write_model_statistics_mixture(fit, name = "Ci")
-  plot_posterior_checks(fit, responsevar = dat$Ci, name = "Ci")
+  write_model_statistics(fit, name = "Ci", mixture = T)
+  plot_posterior_checks(fit,
+                        responsevar = dat$Ci,
+                        name = "Ci")
+  
+  # Transpiration rate - data are gamma
+  fit <-
+    compile_and_fit_phys_gamma_model(dat,
+                                     responsevar = dat$Trmmol,
+                                     iter = iter)
+  plot_main_effects(fit, name = "Trmmol")
+  write_model_statistics(fit, name = "Trmmol")
+  plot_posterior_checks(fit,
+                        responsevar = dat$Trmmol,
+                        name = "Trmmol")
+  
+  # Vapor pressure deficit - data are normal
+  fit <-
+    compile_and_fit_phys_normal_model(dat,
+                                      responsevar = dat$VpdL,
+                                      iter = iter)
+  plot_main_effects(fit, name = "VpdL")
+  write_model_statistics(fit, name = "VpdL")
+  plot_posterior_checks(fit,
+                        responsevar = dat$VpdL,
+                        name = "VpdL")
+  
+  # Water use efficiency - data are gamma
+  fit <-
+    compile_and_fit_phys_gamma_model(dat,
+                                     responsevar = dat$iWUE,
+                                     iter = iter)
+  plot_main_effects(fit, name = "iWUE")
+  write_model_statistics(fit, name = "iWUE")
+  plot_posterior_checks(fit,
+                        responsevar = dat$iWUE,
+                        name = "iWUE")
 }
-
-
-
-
-
-# 
-# 
-# 
-# 
-# ## Data are normal/mixture
-# phys.model.mixture(
-#   plot_title = "Photosynthetic rate",
-#   responsevar = phys.data$photo,
-#   outfile1 = "Stanmodel_phys_results_PHOTO_stats.csv",
-#   outfile2 = "Stanmodel_phys_results_PHOTO_Pr.csv",
-#   normalityplot1 = "Stanmodel_phys_results_PHOTO_posterior_check1.pdf",
-#   normalityplot2 = "Stanmodel_phys_results_PHOTO_posterior_check2.pdf"
-# )
-# ## Data are gamma
-# phys.model.gamma(
-#   plot_title = "Stomatal conductance",
-#   responsevar = phys.data$cond + 1,
-#   ## Transformation of conductance necessary, won't converge otherwise
-#   outfile1 = "Stanmodel_phys_results_COND_stats.csv",
-#   outfile2 = "Stanmodel_phys_results_COND_Pr.csv",
-#   normalityplot1 = "Stanmodel_phys_results_COND_posterior_check1.pdf",
-#   normalityplot2 = "Stanmodel_phys_results_COND_posterior_check2.pdf"
-# )
-# ## Data are normal/mixture
-# phys.model.mixture(
-#   plot_title = "Intercellular CO2",
-#   responsevar = phys.data$Ci,
-#   outfile1 = "Stanmodel_phys_results_Ci_stats.csv",
-#   outfile2 = "Stanmodel_phys_results_Ci_Pr.csv",
-#   normalityplot1 = "Stanmodel_phys_results_Ci_posterior_check1.pdf",
-#   normalityplot2 = "Stanmodel_phys_results_Ci_posterior_check2.pdf"
-# )
-# ## Data are gamma
-# phys.model.gamma(
-#   plot_title = "Transpiration rate",
-#   responsevar = phys.data$Trmmol,
-#   outfile1 = "Stanmodel_phys_results_Trmmol_stats.csv",
-#   outfile2 = "Stanmodel_phys_results_Trmmol_Pr.csv",
-#   normalityplot1 = "Stanmodel_phys_results_Trmmol_posterior_check1.pdf",
-#   normalityplot2 = "Stanmodel_phys_results_Trmmol_posterior_check2.pdf"
-# )
-# # Data are normal
-# phys.model.normal(
-#   plot_title = "Vapor pressure deficit",
-#   responsevar = phys.data$VpdL,
-#   outfile1 = "Stanmodel_phys_results_VpdL_stats.csv",
-#   outfile2 = "Stanmodel_phys_results_VpdL_Pr.csv",
-#   normalityplot1 = "Stanmodel_phys_results_VpdL_posterior_check1.pdf",
-#   normalityplot2 = "Stanmodel_phys_results_VpdL_posterior_check2.pdf"
-# )
-# ## Data are gamma
-# phys.model.gamma(
-#   plot_title = "Water use efficiency",
-#   responsevar = phys.data$iWUE,
-#   outfile1 = "Stanmodel_phys_results_iWUE_stats.csv",
-#   outfile2 = "Stanmodel_phys_results_iWUE_Pr.csv",
-#   normalityplot1 = "Stanmodel_phys_results_iWUE_posterior_check1.pdf",
-#   normalityplot2 = "Stanmodel_phys_results_iWUE_posterior_check2.pdf"
-# )
