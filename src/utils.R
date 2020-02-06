@@ -46,3 +46,15 @@ theme_sigmaplot <-
     }
     return(sigmaplot)
   }
+
+
+legend_custom <-
+  function() {
+    obj <- theme(
+      legend.position = "top",
+      legend.direction = "horizontal",
+      legend.title = element_blank()
+    )
+    
+    return(obj)
+  }

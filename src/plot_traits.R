@@ -54,20 +54,20 @@ phys_plot <-
       xlab(expression(paste("N addition (g ", m ^ {
         -2
       }, ')'))) +
-      labs(colour = "Species") +
       annotate(
         "text",
         Inf,
         Inf,
         label = grid_label,
-        hjust = 1,
-        vjust = 1,
-        size = 10
+        hjust = 1.1,
+        vjust = 1.1,
+        size = 7
       ) +
       guides(colour = guide_legend(override.aes = list(shape = c(
         bogr_shape,
         spco_shape
       )))) +
+      legend_custom() +
       theme(legend.text.align = 0)
     
     if (fit_line) {
@@ -121,7 +121,6 @@ g_legend <- function(a.gplot) {
 
 
 arrange_phys_plots <- function(){
-  # TODO: Needs some grid arrange cleanup
   p1 <- 
     phys_plot(prep_trait_data(), 
               trait = "photo", 
@@ -155,9 +154,20 @@ arrange_phys_plots <- function(){
               grid_label = "(d)") +
     theme(legend.position = "none")
   
-  pdf("figures/physiological_traits.pdf",height=8,width=9)
-  grid.arrange(arrangeGrob(p1,p2,p3,p4,nrow = 2), 
-               leg, widths = c(9,1), ncol = 2)
+  main <-
+    plot_grid(p1,
+              p2,
+              p3,
+              p4,
+              nrow = 2,
+              align = "hv",
+              axis = "bl")
+  
+  pdf("figures/physiological_traits.pdf",height=7,width=7)
+  grid.arrange(leg,
+               main,
+               heights = c(1,10), 
+               ncol = 1)
   dev.off()
   
 }

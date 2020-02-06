@@ -41,7 +41,7 @@ run_pca <- function() {
       metab_design %>%
         rename(sample_name = X) %>%
         mutate(sample_name = as.character(sample_name)) %>%
-        select(!(X.1)),
+        select(-(X.1)),
       as.data.frame(prcomp_analysis$x) %>%
         mutate(sample_name = rownames(as.data.frame(
           prcomp_analysis$x
@@ -86,18 +86,18 @@ plot_pca <- function(combined_data, filename = NA) {
       -2
     }, ')'))) +
     ylab(pca_yaxis) +
-    labs(colour = "Species") +
     guides(colour = guide_legend(override.aes = list(shape = c(
       bogr_shape, spco_shape
     )))) +
+    legend_custom() +
     theme(legend.text.align = 0)
   
   gg
   
   if (!(is.na(filename))) {
     ggsave(file = filename,
-           height = 3,
-           width = 4.5)
+           height = 3.5,
+           width = 3.5)
   }
   
   return(gg)
