@@ -11,4 +11,4 @@ In order to determine the role of dominant species in community nitrogen respons
 
 This could indicate that biotic interactions and species turnover in the shortgrass steppe are key to understanding nitrogen response. Thus, despite apparent resistance to nitrogen addition by the dominant species in this ecosystem, this community may still be vulnerable to shifts caused by increased nitrogen deposition and accumulation.
 
-![Cover by Nitrogen](https://github.com/avahoffman/change-metabolomics/blob/master/Figures/coverbyN.png)
+![Cover by Nitrogen](https://github.com/avahoffman/change-metabolomics/blob/master/figures/cover_v_N.png)
