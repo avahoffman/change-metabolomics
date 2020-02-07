@@ -1,0 +1,109 @@
+lavaan 0.6-5 ended normally after 51 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of free parameters                         19
+                                                      
+  Number of observations                            27
+                                                      
+Model Test User Model:
+                                                      
+  Test statistic                                 7.714
+  Degrees of freedom                                 8
+  P-value (Chi-square)                           0.462
+
+Model Test Baseline Model:
+
+  Test statistic                                84.627
+  Degrees of freedom                                21
+  P-value                                        0.000
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    1.000
+  Tucker-Lewis Index (TLI)                       1.012
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)               -191.568
+  Loglikelihood unrestricted model (H1)       -187.711
+                                                      
+  Akaike (AIC)                                 421.135
+  Bayesian (BIC)                               445.756
+  Sample-size adjusted Bayesian (BIC)          386.731
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.000
+  90 Percent confidence interval - lower         0.000
+  90 Percent confidence interval - upper         0.220
+  P-value RMSEA <= 0.05                          0.513
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.081
+
+Parameter Estimates:
+
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+  Standard errors                             Standard
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+  traits =~                                                             
+    BOGR_cover        1.000                               0.957    0.925
+  metabolome =~                                                         
+    traits            1.000                               0.993    0.993
+
+Regressions:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+  ELEL_cover ~                                                          
+    nitrogen          0.085    0.020    4.305    0.000    0.085    0.638
+  BOGR_cover ~                                                          
+    nitrogen         -0.061    0.031   -2.003    0.045   -0.061   -0.489
+    ELEL_cover       -0.347    0.172   -2.013    0.044   -0.347   -0.371
+  M16 ~                                                                 
+    nitrogen          0.107    0.020    5.311    0.000    0.107    0.715
+  M10 ~                                                                 
+    nitrogen          0.012    0.020    0.634    0.526    0.012    0.121
+  photo ~                                                               
+    nitrogen          0.032    0.020    1.579    0.114    0.032    0.291
+  Ci ~                                                                  
+    nitrogen         -0.021    0.022   -0.963    0.335   -0.021   -0.182
+  metabolome ~                                                          
+    M16               0.465    0.190    2.453    0.014    0.490    0.605
+    M10              -0.025    0.195   -0.127    0.899   -0.026   -0.022
+  traits ~                                                              
+    photo            -0.416    0.243   -1.713    0.087   -0.435   -0.389
+    Ci               -0.173    0.218   -0.794    0.427   -0.181   -0.175
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+ .M16 ~~                                                                
+   .M10               0.321    0.152    2.107    0.035    0.321    0.444
+ .photo ~~                                                              
+   .Ci               -0.578    0.192   -3.003    0.003   -0.578   -0.708
+
+Variances:
+                   Estimate  Std.Err  z-value  P(>|z|)   Std.lv  Std.all
+   .BOGR_cover        0.000                               0.000    0.000
+   .ELEL_cover        0.723    0.197    3.674    0.000    0.723    0.593
+   .M16               0.744    0.203    3.674    0.000    0.744    0.489
+   .M10               0.704    0.192    3.674    0.000    0.704    0.985
+   .photo             0.733    0.200    3.674    0.000    0.733    0.915
+   .Ci                0.907    0.247    3.674    0.000    0.907    0.967
+   .traits            0.000                               0.000    0.000
+   .metabolome        0.581    0.158    3.674    0.000    0.645    0.645
+
+R-Square:
+                   Estimate
+    BOGR_cover        1.000
+    ELEL_cover        0.407
+    M16               0.511
+    M10               0.015
+    photo             0.085
+    Ci                0.033
+    traits            1.000
+    metabolome        0.355
+

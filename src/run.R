@@ -21,6 +21,7 @@ source("src/model_on_pc.R")
 source("src/model_on_phys.R")
 source("src/model_on_cover.R")
 source("src/metab_modules.R")
+source("src/sem.R")
 
 ###########################################################################################
 # Run pipeline
@@ -48,3 +49,6 @@ plot_nitrogen_and_cover(filename = "figures/cover_v_N.pdf")
 
 # Metabolite network/module analysis
 make_module_heatmap()
+
+# SEM
+plot_sem()

@@ -52,3 +52,6 @@ heatmap_plotnames <-
 
 heatmap_colorpal <- 
   colorRampPalette(c("#38598CFF","white","#92D741FF"))
+
+sem_neg_color <- "#7570b3"
+sem_pos_color <- "#1b9e77"
