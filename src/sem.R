@@ -92,10 +92,10 @@ fit_sem_model <-
       fit <- sem(model, data = corr_data_BOGR)
       fitMeasures(fit, c("nfi", "ifi"))
       
-      ## predict latent variables
+      # Predict latent variables
       lavPredict(fit)
       
-      ## all fit parameters
+      # All fit parameters
       parameterestimates(fit)
       sink("sem/sem_bogr_cover_summary.txt")
       summary(
@@ -108,6 +108,48 @@ fit_sem_model <-
       sink()
       
       return(fit)
+    } else if (!(bogr)){
+      corr_data_SPCO <-
+        corr_data %>%
+        filter(spp == 2)
+      
+      # SEM model
+      model <- '
+        # measurement model
+        traits =~ SPCO_cover
+        metabolome =~ traits
+        
+        # regressions
+        
+        ELEL_cover ~ nitrogen
+        SPCO_cover ~ nitrogen + ELEL_cover
+        M16 + M10 + photo + Ci ~ nitrogen
+        metabolome ~ M16 + M10 
+        traits ~ photo + Ci
+        
+        ##covariance
+        M16~~M10
+        photo~~Ci
+      '
+      
+      # Fit model
+      fit <- sem(model, data = corr_data_SPCO)
+      fitMeasures(fit, c("nfi","ifi"))
+      
+      # Predict latent variables
+      lavPredict(fit)
+      
+      # All fit parameters
+      parameterestimates(fit)
+      sink("sem/sem_spco_cover_summary.txt")
+      summary(
+        fit,
+        fit.measures = TRUE,
+        standardized = T,
+        rsquare = T
+      )
+      fitMeasures(fit)
+      sink()
     }
   }
 
