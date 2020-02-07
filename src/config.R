@@ -33,3 +33,22 @@ photo_ylab <- expression(paste("Net photsynthetic rate (", mu,"mol ",CO[2]~ m^-2
 cond_ylab <- expression(paste("Stomatal conductance (mol ", H[2]~O~ m^-2, s^-1,")"))
 ci_ylab <- expression(paste("Intercellular ", CO[2]," (", mu,"mol ",CO[2]~ mol^-1,")"))
 iWUE_ylab <- expression(paste("Water use efficiency (", mu,"mol ",CO[2]," / ","mmol ",H[2]~O,")"))
+
+heatmap_plotnames <- 
+  c(
+    "nitrogen",
+    "species",
+    "BOGR cover",
+    "SPCO cover",
+    "ELEL cover",
+    "total biomass",
+    "grass biomass",
+    "forb biomass",
+    "photo. rate",
+    "conductance",
+    "intercell. CO2",
+    "water use efficiency"
+  )
+
+heatmap_colorpal <- 
+  colorRampPalette(c("#38598CFF","white","#92D741FF"))

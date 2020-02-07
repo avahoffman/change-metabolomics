@@ -20,6 +20,7 @@ source("src/plot_cover.R")
 source("src/model_on_pc.R")
 source("src/model_on_phys.R")
 source("src/model_on_cover.R")
+source("src/metab_modules.R")
 
 ###########################################################################################
 # Run pipeline
@@ -44,3 +45,6 @@ arrange_phys_plots()
 
 # Cover against N
 plot_nitrogen_and_cover(filename = "figures/cover_v_N.pdf")
+
+# Metabolite network/module analysis
+make_module_heatmap()
