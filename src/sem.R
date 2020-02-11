@@ -74,15 +74,15 @@ fit_sem_model <-
         # measurement model
         traits =~ BOGR_cover
         metabolome =~ traits
-  
+
         # regressions
-  
+
         ELEL_cover ~ nitrogen
         BOGR_cover ~ nitrogen + ELEL_cover
          M16 + M10 + photo + Ci ~ nitrogen
         metabolome ~ M16 + M10
         traits ~ photo + Ci
-  
+
         ##covariance
         M16~~M10
         photo~~Ci
@@ -108,7 +108,7 @@ fit_sem_model <-
       sink()
       
       return(fit)
-    } else if (!(bogr)){
+    } else if (!(bogr)) {
       corr_data_SPCO <-
         corr_data %>%
         filter(spp == 2)
@@ -118,15 +118,15 @@ fit_sem_model <-
         # measurement model
         traits =~ SPCO_cover
         metabolome =~ traits
-        
+
         # regressions
-        
+
         ELEL_cover ~ nitrogen
         SPCO_cover ~ nitrogen + ELEL_cover
         M16 + M10 + photo + Ci ~ nitrogen
-        metabolome ~ M16 + M10 
+        metabolome ~ M16 + M10
         traits ~ photo + Ci
-        
+
         ##covariance
         M16~~M10
         photo~~Ci
@@ -134,7 +134,7 @@ fit_sem_model <-
       
       # Fit model
       fit <- sem(model, data = corr_data_SPCO)
-      fitMeasures(fit, c("nfi","ifi"))
+      fitMeasures(fit, c("nfi", "ifi"))
       
       # Predict latent variables
       lavPredict(fit)
@@ -178,7 +178,7 @@ setup_plot_params <-
     
     for (i in 1:nrow(params)) {
       if (!(params$lhs[i] == params$rhs[i])) {
-        useparams <- rbind(useparams, params[i,])
+        useparams <- rbind(useparams, params[i, ])
       }
     }
     for (i in 1:nrow(useparams)) {
