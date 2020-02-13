@@ -1,17 +1,18 @@
-# Execution script for project pipeline.
+###########################################################################################
+# Execution script for project pipeline
 
 ###########################################################################################
-# Set working directory for the repository (should be the git repo):
+# Set working directory for the repository (should be the git repo)
 wd <-
    "/Users/hoffman ava/change-metabolomics/"
 # "/Users/avahoffman/Dropbox/Research/SGS_Metabolomics/Change_2016-17_Nate/change-metabolomics/"
-
 setwd(wd)
 
+###########################################################################################
+# Load sources
 # General functions and configuration
 source("src/config.R")
 source("src/utils.R")
-
 # Specific functions
 source("src/clean.R")
 source("src/pca.R")
