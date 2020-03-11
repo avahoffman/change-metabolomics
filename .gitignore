@@ -43,3 +43,6 @@ vignettes/*.pdf
 
 # Large Stan results
 *output/stanmodel*
+
+# Publication
+Hoffman*
