@@ -11,9 +11,7 @@ options(mc.cores = parallel::detectCores()) # option to make Stan parallelize
 rstan_options(auto_write = TRUE)
 library(bayesplot) # Plots of mcmc output
 
-
 ###########################################################################################
-
 
 compile_and_fit_phys_mixture_model <-
   function(df, responsevar, iter = 100000) {
@@ -228,7 +226,7 @@ compile_and_fit_phys_gamma_model <-
         iter = iter,
         warmup = iter / 2,
         thin = 1,
-        chains = 2
+        chains = 1
       )
     return(fit)
     
