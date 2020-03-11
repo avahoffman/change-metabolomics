@@ -4,8 +4,7 @@
 ###########################################################################################
 # Set working directory for the repository (should be the git repo)
 wd <-
-   "/Users/hoffman ava/change-metabolomics/"
-# "/Users/avahoffman/Dropbox/Research/SGS_Metabolomics/Change_2016-17_Nate/change-metabolomics/"
+   "/Users/avahoffman/Dropbox/Research/SGS_Metabolomics/Change_2016-17_Nate/change-metabolomics/"
 setwd(wd)
 
 ###########################################################################################

@@ -8,7 +8,7 @@ prep_trait_data <- function() {
     read.csv("data/clean_SpecAbund_design.csv") %>%
     filter(!(is.na(photo))) %>%
     filter(!(X == "A2_Bogr")) %>% # all zeros, not helpful datapoint
-    mutate(iWUE = photo / Trmmol) # generate new variable for water use efficiency
+    mutate(iWUE = photo / cond) # generate new variable for water use efficiency
   return(phys_data)
 }
 
