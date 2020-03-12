@@ -11,6 +11,8 @@
 #   install.packages("BiocManager")
 # BiocManager::install(c("impute","preprocessCore", "GO.db", "AnnotationDbi"))
 # install.packages("WGCNA")
+# Note that there are some default compiler changes in Mac OS Catalina. These can be worked
+# around using R from terminal and xcode command line tools.
 library(WGCNA)
 
 ###########################################################################################

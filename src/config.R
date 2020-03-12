@@ -4,12 +4,12 @@
 
 # PCA plotting
 pca_component <- "PC1"
-pca_yaxis <- "PC1 (59%)"
+pca_yaxis <- "PC1 (40%)"
 
 ###########################################################################################
 
 # MCMC sampling
-iter <- 1000
+iter <- 100000
 
 ###########################################################################################
 
@@ -30,7 +30,7 @@ S.coccinea <- expression(italic("S. coccinea"))
 photo_ylab <- expression(paste("Net photsynthetic rate (", mu,"mol ",CO[2]~ m^-2, s^-1,")"))
 cond_ylab <- expression(paste("Stomatal conductance (mol ", H[2]~O~ m^-2, s^-1,")"))
 ci_ylab <- expression(paste("Intercellular ", CO[2]," (", mu,"mol ",CO[2]~ mol^-1,")"))
-iWUE_ylab <- expression(paste("Water use efficiency (", mu,"mol ",CO[2]," / ","mmol ",H[2]~O,")"))
+iWUE_ylab <- expression(paste("Water use efficiency (", mu,"mol ",CO[2]," / ","mol ", H[2]~O~ m^-2, s^-1,")"))
 
 heatmap_plotnames <- 
   c(

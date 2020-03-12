@@ -14,7 +14,7 @@ library(bayesplot) # Plots of mcmc output
 ###########################################################################################
 
 compile_and_fit_phys_mixture_model <-
-  function(df, responsevar, iter = 100000) {
+  function(df, responsevar, iter = 100000, adapt_delta = 0.8) {
     ## Bayesian mixture model for bimodal distributions
     
     #Stan model
@@ -74,7 +74,8 @@ compile_and_fit_phys_mixture_model <-
       'phys' = responsevar,
       'spp' = as.numeric(df$spp) - 1,
       # Want zeros and ones for species
-      'Nit' = df$nitrogen
+      'Nit' = df$nitrogen,
+      adapt_delta = adapt_delta
     )
     # Perform MCMC sampling
     fit <-
@@ -91,7 +92,7 @@ compile_and_fit_phys_mixture_model <-
 
 
 compile_and_fit_phys_normal_model <-
-  function(df, responsevar, iter = 100000) {
+  function(df, responsevar, iter = 100000, adapt_delta = 0.8) {
     ## Bayesian model for normal distributions
     
     # Stan model
@@ -143,7 +144,8 @@ compile_and_fit_phys_normal_model <-
       'phys' = responsevar,
       'spp' = as.numeric(df$spp) - 1,
       # Want zeros and ones for species
-      'Nit' = df$nitrogen
+      'Nit' = df$nitrogen,
+      adapt_delta = adapt_delta
     )
     # Perform MCMC sampling
     fit <-
@@ -160,7 +162,7 @@ compile_and_fit_phys_normal_model <-
 
 
 compile_and_fit_phys_gamma_model <-
-  function(df, responsevar, iter = 100000) {
+  function(df, responsevar, iter = 100000, adapt_delta = 0.8) {
     ## Bayesian model for gamma distributions
     
     # Stan model
@@ -216,7 +218,8 @@ compile_and_fit_phys_gamma_model <-
       'phys' = responsevar,
       'spp' = as.numeric(df$spp) - 1,
       # Want zeros and ones for species
-      'Nit' = df$nitrogen
+      'Nit' = df$nitrogen,
+      adapt_delta = adapt_delta
     )
     # Perform MCMC sampling
     fit <-
@@ -226,7 +229,7 @@ compile_and_fit_phys_gamma_model <-
         iter = iter,
         warmup = iter / 2,
         thin = 1,
-        chains = 1
+        chains = 2
       )
     return(fit)
     
@@ -262,11 +265,11 @@ model_phys <- function() {
   
   # Intercellular CO2 - data are normal/mixture
   fit <-
-    compile_and_fit_phys_mixture_model(dat,
+    compile_and_fit_phys_normal_model(dat,
                                        responsevar = dat$Ci,
                                        iter = iter)
   plot_main_effects(fit, name = "Ci")
-  write_model_statistics(fit, name = "Ci", mixture = T)
+  write_model_statistics(fit, name = "Ci")
   plot_posterior_checks(fit,
                         responsevar = dat$Ci,
                         name = "Ci")
@@ -295,9 +298,10 @@ model_phys <- function() {
   
   # Water use efficiency - data are gamma
   fit <-
-    compile_and_fit_phys_gamma_model(dat,
+    compile_and_fit_phys_normal_model(dat,
                                      responsevar = dat$iWUE,
-                                     iter = iter)
+                                     iter = iter,
+                                     adapt_delta = 0.9)
   plot_main_effects(fit, name = "iWUE")
   write_model_statistics(fit, name = "iWUE")
   plot_posterior_checks(fit,

@@ -8,7 +8,7 @@
 library(dplyr)
 library(ggplot2)
 library(gridExtra)
-
+library(cowplot)
 
 ###########################################################################################
 
@@ -27,7 +27,7 @@ phys_plot <-
                col = as.factor(spp),
                shape = as.factor(spp)
              )) +
-      theme_sigmaplot() +
+      theme_cowplot() +
       ylab(ylab) +
       geom_jitter(size = 3,
                   width = 0.2,
@@ -51,7 +51,7 @@ phys_plot <-
         label = grid_label,
         hjust = 1.1,
         vjust = 1.1,
-        size = 7
+        size = 5
       ) +
       guides(colour = guide_legend(override.aes = list(shape = c(
         bogr_shape,
@@ -130,13 +130,15 @@ arrange_phys_plots <- function(){
     phys_plot(prep_trait_data(), 
               trait = "Ci", 
               ylab = ci_ylab, 
-              grid_label = "(c)") +
+              grid_label = "(c)",
+              fit_line = T) +
     theme(legend.position = "none")
   p4 <- 
     phys_plot(prep_trait_data(), 
               trait = "iWUE", 
               ylab = iWUE_ylab, 
-              grid_label = "(d)") +
+              grid_label = "(d)",
+              fit_line = T) +
     theme(legend.position = "none")
   
   main <-
@@ -148,11 +150,12 @@ arrange_phys_plots <- function(){
               align = "hv",
               axis = "bl")
   
-  pdf("figures/physiological_traits.pdf",height=7,width=7)
+  pdf("figures/physiological_traits.pdf",height=10,width=10)
   grid.arrange(leg,
                main,
-               heights = c(1,10), 
-               ncol = 1)
+               heights = c(1,10),
+               nrow = 2
+               )
   dev.off()
   
 }

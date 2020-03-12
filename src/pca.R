@@ -6,6 +6,7 @@
 # Load libraries
 library(dplyr)
 library(ggplot2)
+library(cowplot)
 
 ###########################################################################################
 
@@ -76,7 +77,7 @@ plot_pca <- function(combined_data, filename = NA) {
                 height = 0) +
     scale_shape_manual(values = c(bogr_shape, spco_shape),
                        guide = F) +
-    theme_sigmaplot() +
+    theme_cowplot() +
     scale_color_manual(
       values = c(bogr_color,
                  spco_color),
