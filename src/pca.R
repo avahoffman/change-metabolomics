@@ -97,8 +97,8 @@ plot_pca <- function(combined_data, filename = NA) {
   
   if (!(is.na(filename))) {
     ggsave(file = filename,
-           height = 3.5,
-           width = 3.5)
+           height = 5,
+           width = 5)
   }
   
   return(gg)

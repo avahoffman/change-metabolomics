@@ -72,7 +72,7 @@ plot_nitrogen_and_cover <-
     
     if (!(is.na(filename))) {
       ggsave(file = filename,
-             height = 5.5,
+             height = 5,
              width = 5)
     }
     
