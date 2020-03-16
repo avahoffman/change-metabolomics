@@ -45,7 +45,7 @@ model_cover()
 arrange_phys_plots()
 
 # Cover against N
-plot_nitrogen_and_cover(filename = "figures/cover_v_N.pdf")
+plot_nitrogen_and_cover(filename = "figures/cover_v_N.png")
 
 # Metabolite network/module analysis
 make_module_heatmap()

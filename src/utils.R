@@ -222,6 +222,7 @@ legend_custom <-
     obj <- theme(
       legend.position = "top",
       legend.direction = "horizontal",
+      legend.justification = 0.5,
       legend.title = element_blank()
     )
     

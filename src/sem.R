@@ -55,7 +55,7 @@ get_sem_data <-
                                                    T)))
     
     # View correlations
-    print(cor(corr_data[, 7:20]))
+    print(cor(corr_data[,c( 7:18,21,22)]))
     
     return(corr_data)
   }
@@ -78,14 +78,14 @@ fit_sem_model <-
         # regressions
 
         ELEL_cover ~ nitrogen
-        BOGR_cover ~ nitrogen + ELEL_cover
-         M16 + M10 + photo + Ci ~ nitrogen
+        BOGR_cover ~ ELEL_cover + nitrogen
+         M16 + M10 + photo + iWUE ~ nitrogen
         metabolome ~ M16 + M10
-        traits ~ photo + Ci
+        traits ~ photo + iWUE
 
         ##covariance
         M16~~M10
-        photo~~Ci
+        photo~~iWUE
       '
       
       # Fit model
@@ -123,13 +123,13 @@ fit_sem_model <-
 
         ELEL_cover ~ nitrogen
         SPCO_cover ~ nitrogen + ELEL_cover
-        M16 + M10 + photo + Ci ~ nitrogen
+        M16 + M10 + photo + iWUE ~ nitrogen
         metabolome ~ M16 + M10
-        traits ~ photo + Ci
+        traits ~ photo + iWUE
 
         ##covariance
         M16~~M10
-        photo~~Ci
+        photo~~iWUE
       '
       
       # Fit model
@@ -157,15 +157,15 @@ fit_sem_model <-
 setup_plot_params <-
   function(fit) {
     ## custom labels
-    labs <- unlist(fit@pta$vnames$ov)
-    labs
-    labs[1] <- "BOGR\ncover"
-    labs[6] <- "ELEL\ncover"
-    labs[5] <- "M10"
-    labs[4] <- "M16"
-    labs[3] <- "photo"
-    labs[2] <- "CO2"
-    labs[7] <- "N"
+    # labs <- unlist(fit@pta$vnames$ov)
+    # labs
+    # labs[1] <- "BOGR\ncover"
+    # labs[6] <- "ELEL\ncover"
+    # labs[5] <- "M10"
+    # labs[4] <- "M16"
+    # labs[3] <- "photo"
+    # labs[2] <- "CO2"
+    # labs[7] <- "N"
     
     # Add custom  colors, will cycle through and color purple if neg and significant,
     # green if pos and significant, grey if NS
@@ -205,10 +205,20 @@ plot_sem <-
     fit <- fit_sem_model(get_sem_data())
     useparams <- setup_plot_params(fit)
     
+    labs <- c(
+      "BOGR\ncover",
+      "iWUE",
+      "photo",
+      "M16",
+      "M10",
+      "ELEL\ncover",
+      "N"
+    )
+    
     ## weighted diagram
     pdf(file = "sem/estimates_diagram_BOGR_cover.pdf",
-        width = 3,
-        height = 3)
+        width = 4,
+        height = 2)
     graph <- semPaths(
       fit,
       layout = "tree2",
@@ -228,8 +238,8 @@ plot_sem <-
     
     ## Unweightd diagram
     pdf(file = "sem/unweighted_diagram_BOGR_cover.pdf",
-        width = 3,
-        height = 3)
+        width = 4,
+        height = 2)
     graph <- semPaths(
       fit,
       layout = "tree2",

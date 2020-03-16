@@ -7,7 +7,7 @@
 library(dplyr)
 library(tidyr)
 library(ggplot2)
-
+library(cowplot)
 
 ###########################################################################################
 
@@ -16,7 +16,7 @@ plot_nitrogen_and_cover <-
   function(filename = NA) {
     community_data <-
       na.omit(read.csv("data/SpecAbund_community_design.csv")) %>%
-      select(c(nitrogen, BOGR_cover, SPCO_cover, `ELEL_.cover`)) %>%
+      dplyr::select(c(nitrogen, BOGR_cover, SPCO_cover, `ELEL_.cover`)) %>%
       gather(spp, cover,-nitrogen)
     
     gg <- 
@@ -27,7 +27,7 @@ plot_nitrogen_and_cover <-
              shape = as.factor(spp),
              col = as.factor(spp)
            )) +
-      theme_sigmaplot() +
+      theme_cowplot() +
       geom_smooth(
         data = community_data %>%
           filter(spp == "BOGR_cover"),
@@ -72,8 +72,8 @@ plot_nitrogen_and_cover <-
     
     if (!(is.na(filename))) {
       ggsave(file = filename,
-             height = 4.5,
-             width = 4)
+             height = 5.5,
+             width = 5)
     }
     
     return(gg)
