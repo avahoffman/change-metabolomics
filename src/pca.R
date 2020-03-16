@@ -42,7 +42,7 @@ run_pca <- function() {
       metab_design %>%
         rename(sample_name = X) %>%
         mutate(sample_name = as.character(sample_name)) %>%
-        select(-(X.1)),
+        dplyr::select(-(X.1)),
       as.data.frame(prcomp_analysis$x) %>%
         mutate(sample_name = rownames(as.data.frame(
           prcomp_analysis$x

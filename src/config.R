@@ -15,9 +15,10 @@ iter <- 100000
 
 # Plotting
 
-bogr_color <- "#1b9e77"
-spco_color <- "#d95f02"
-elel_color <- "#7570b3"
+# Follow viridis plotting convention
+bogr_color <- "#73D055FF"
+spco_color <- "#482677FF"
+elel_color <- "#287D8EFF"
 
 bogr_shape <- 16
 spco_shape <- 8
