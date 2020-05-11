@@ -37,12 +37,6 @@ heatmap_plotnames <-
   c(
     "nitrogen",
     "species",
-    "BOGR cover",
-    "SPCO cover",
-    "ELEL cover",
-    "total biomass",
-    "grass biomass",
-    "forb biomass",
     "photo. rate",
     "conductance",
     "intercell. CO2",
