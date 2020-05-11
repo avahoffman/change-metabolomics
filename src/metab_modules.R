@@ -197,7 +197,7 @@ make_module_heatmap <-
     par(mar = c(6, 8.5, 3, 3))
     ## Display the correlation values within a heatmap plot
     pdf(file = "figures/module_phys_heatmap.pdf",
-        width = 8,
+        width = 5,
         height = 6)
     labeledHeatmap(
       Matrix = moduleTraitCor,
