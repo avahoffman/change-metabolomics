@@ -46,3 +46,6 @@ vignettes/*.pdf
 
 # Publication
 Hoffman*
+
+# Temp summit output folder
+temp/*
