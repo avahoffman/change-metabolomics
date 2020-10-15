@@ -10,7 +10,7 @@ library(minerva)
 library(foreach)
 library(doParallel)
 
-cl <- makeCluster(48)
+cl <- makeCluster(24)
 registerDoParallel(cl)
 
 ###########################################################################################
@@ -73,8 +73,7 @@ run_metab_data_MIC <-
         xvar_no_na <- xvar[!(is.na(xvar))]
         
         MIC.null <- vector()
-        MIC.null <-
-          for (b in 1:nBootstraps) {
+        for (b in 1:nBootstraps) {
             nsamples <- length(xvar_no_na)
             resampledX <-
               xvar_no_na[sample(1:nsamples, replace = F)]

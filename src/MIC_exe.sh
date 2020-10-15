@@ -9,7 +9,7 @@
 #SBATCH --output=out.%j.out
 #SBATCH --qos=normal
 #SBATCH --partition=smem
-#SBATCH --ntasks=48
+#SBATCH --ntasks=24
 
 
 # Written by:    Ava Hoffman
