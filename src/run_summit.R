@@ -16,5 +16,13 @@ source("MIC_score.R")
 ###########################################################################################
 # Run 
 
-run_metab_data_MIC(spp = 0)
-run_metab_data_MIC(spp = 1)
+# run_metab_data_MIC(spp = 0, x_ = "nitrogen")
+# run_metab_data_MIC(spp = 1, x_ = "nitrogen")
+run_metab_data_MIC(spp = 0, x_ = "photo")
+# run_metab_data_MIC(spp = 1, x_ = "photo")
+# run_metab_data_MIC(spp = 0, x_ = "cond")
+# run_metab_data_MIC(spp = 1, x_ = "cond")
+# run_metab_data_MIC(spp = 0, x_ = "Ci")
+# run_metab_data_MIC(spp = 1, x_ = "Ci")
+# run_metab_data_MIC(spp = 0, x_ = "iWUE")
+# run_metab_data_MIC(spp = 1, x_ = "iWUE")

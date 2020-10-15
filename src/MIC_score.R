@@ -18,14 +18,16 @@ registerDoParallel(cl)
 
 
 run_metab_data_MIC <-
-  function(nBootstraps = 5000, spp = 0) {
+  function(nBootstraps = 5000,
+           spp = 0,
+           x_ = "nitrogen") {
     dat <-
       read.csv("data/clean_SpecAbund_metabolites.csv")
     metabs <- as.data.frame(t(dat[,-c(1)]))
     
     phys_dat <-
       read.csv("data/phys_metabs_for_modules.csv")
-
+    
     spp_frame <-
       foreach(i = 1:ncol(metabs), .combine = rbind) %dopar% {
         #ncol(metabs)
@@ -67,20 +69,24 @@ run_metab_data_MIC <-
         metab_id <- names(metabs[i])
         print(metab_id)
         yvar <- metabs[phys_dat$spp == spp, i]
-        xvar <- phys_dat$nitrogen[phys_dat$spp == spp]
+        if (x_ == "nitrogen") {
+          xvar <- phys_dat$nitrogen[phys_dat$spp == spp]
+        } else if (x_ == "photo") {
+          xvar <- phys_dat$photo[phys_dat$spp == spp]
+        }
         
         yvar_no_na <- yvar[!(is.na(xvar))]
         xvar_no_na <- xvar[!(is.na(xvar))]
         
         MIC.null <- vector()
         for (b in 1:nBootstraps) {
-            nsamples <- length(xvar_no_na)
-            resampledX <-
-              xvar_no_na[sample(1:nsamples, replace = F)]
-            mic <- mine(resampledX, yvar_no_na , n.cores = 2)
-            mic$MIC
-            MIC.null[b] <- mic$MIC
-          }
+          nsamples <- length(xvar_no_na)
+          resampledX <-
+            xvar_no_na[sample(1:nsamples, replace = F)]
+          mic <- mine(resampledX, yvar_no_na , n.cores = 2)
+          mic$MIC
+          MIC.null[b] <- mic$MIC
+        }
         
         MIC.actual <- mine(xvar_no_na, yvar_no_na)$MIC
         p.value = pcalc(
@@ -93,16 +99,23 @@ run_metab_data_MIC <-
           data.frame(
             metab_id = rep(metab_id, length(xvar_no_na)),
             metab = yvar_no_na,
-            nit = xvar_no_na,
+            x_ = xvar_no_na,
             spp = spp,
             pval = rep(p.value, length(xvar_no_na)),
             mic = rep(MIC.actual, length(xvar_no_na))
           )
         
+        # Have to explicitly name this column to the variable
+        colnames(out)[3] <- x_
+        
         out
-        # df_final <-
-        #   rbind(df_final, out)
       }
     
-    write.csv(spp_frame, file = paste(spp,"_metabolomic_MIC_output_nitrogen.csv",sep = ""))
+    if (x_ == "nitrogen") {
+      write.csv(spp_frame,
+                file = paste(spp, "_metabolomic_MIC_output_nitrogen.csv", sep = ""))
+    } else if (x_ == "photo") {
+      write.csv(spp_frame,
+                file = paste(spp, "_metabolomic_MIC_output_photo.csv", sep = ""))
+    }
   }
