@@ -10,7 +10,7 @@ library(minerva)
 library(foreach)
 library(doParallel)
 
-cl <- makeCluster(24)
+cl <- makeCluster(2)
 registerDoParallel(cl)
 
 ###########################################################################################
@@ -80,6 +80,12 @@ run_metab_data_MIC <-
           xvar <- phys_dat$nitrogen[phys_dat$spp == spp]
         } else if (x_ == "photo") {
           xvar <- phys_dat$photo[phys_dat$spp == spp]
+        } else if (x_ == "cond") {
+          xvar <- phys_dat$cond[phys_dat$spp == spp]
+        } else if (x_ == "Ci") {
+          xvar <- phys_dat$Ci[phys_dat$spp == spp]
+        } else if (x_ == "iWUE") {
+          xvar <- phys_dat$iWUE[phys_dat$spp == spp]
         }
         
         yvar_no_na <- yvar[!(is.na(xvar))]
@@ -124,5 +130,14 @@ run_metab_data_MIC <-
     } else if (x_ == "photo") {
       write.csv(spp_frame,
                 file = paste(spp, "_metabolomic_MIC_output_photo.csv", sep = ""))
+    } else if (x_ == "cond") {
+      write.csv(spp_frame,
+                file = paste(spp, "_metabolomic_MIC_output_cond.csv", sep = ""))
+    } else if (x_ == "Ci") {
+      write.csv(spp_frame,
+                file = paste(spp, "_metabolomic_MIC_output_Ci.csv", sep = ""))
+    } else if (x_ == "iWUE") {
+      write.csv(spp_frame,
+                file = paste(spp, "_metabolomic_MIC_output_iWUE.csv", sep = ""))
     }
   }
