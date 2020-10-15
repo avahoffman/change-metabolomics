@@ -16,20 +16,27 @@ registerDoParallel(cl)
 ###########################################################################################
 
 
-
 run_metab_data_MIC <-
-  function(nBootstraps = 5000,
+  function(test_ = F,
            spp = 0,
            x_ = "nitrogen") {
     dat <-
       read.csv("data/clean_SpecAbund_metabolites.csv")
-    metabs <- as.data.frame(t(dat[,-c(1)]))
+    metabs <- as.data.frame(t(dat[, -c(1)]))
     
     phys_dat <-
       read.csv("data/phys_metabs_for_modules.csv")
     
+    if (!(test_)) {
+      n_metabs_ <- ncol(metabs)
+      nBootstraps = 5000
+    } else {
+      n_metabs_ <- 3
+      nBootstraps = 5
+    }
+    
     spp_frame <-
-      foreach(i = 1:ncol(metabs), .combine = rbind) %dopar% {
+      foreach(i = 1:n_metabs_, .combine = rbind) %dopar% {
         #ncol(metabs)
         library(foreach)
         library(doParallel)
@@ -99,7 +106,7 @@ run_metab_data_MIC <-
           data.frame(
             metab_id = rep(metab_id, length(xvar_no_na)),
             metab = yvar_no_na,
-            x_ = xvar_no_na,
+            xvar_no_na,
             spp = spp,
             pval = rep(p.value, length(xvar_no_na)),
             mic = rep(MIC.actual, length(xvar_no_na))
