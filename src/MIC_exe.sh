@@ -1,14 +1,14 @@
 #!/bin/bash
 
 
-#SBATCH --time=24:00:00
+#SBATCH --time=72:00:00
 #SBATCH --job-name=MIC_scor
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=avamariehoffman@gmail.com
 #SBATCH --error=error.%j.out
 #SBATCH --output=out.%j.out
 #SBATCH --qos=normal
-#SBATCH --partition=shas
+#SBATCH --partition=smem
 #SBATCH --ntasks=48
 
 
