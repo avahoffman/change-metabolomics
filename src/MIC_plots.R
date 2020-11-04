@@ -51,37 +51,38 @@ make_mic_plots_nit <-
     
     plotList <- list()
     
+    # Leaving this relic here for now. Very undecided how I want the plots to look
     #for (spp_ in c(0, 1)) {
       for (diff_ in c("increase", "decrease")) {
         p_ <-
           ggplot() +
           stat_smooth(
-            data = df_final[(df_final$diff == diff_ & df_final$spp == 0),],
+            #data = df_final[(df_final$diff == diff_ & df_final$spp == 0),],
+            data = df_final[(df_final$diff == diff_),],
             aes(nit,
                 metab,
+                color = as.factor(spp),
                 group = metab_id),
             span = span_, # lower numbers are less smoothed
             #color = ifelse(spp_ == 0, bogr_color, spco_color),
-            color = bogr_color,
             se = F
           ) +
-          stat_smooth(
-            data = df_final[(df_final$diff == diff_ & df_final$spp == 1),],
-            aes(nit,
-                metab,
-                group = metab_id),
-            span = span_, # lower numbers are less smoothed
-            #color = ifelse(spp_ == 0, bogr_color, spco_color),
-            color = spco_color,
-            se = F
-          ) +
-          theme_cowplot()+
+          scale_color_manual(values = c(bogr_color, spco_color)) +
+          # stat_smooth(
+          #   data = df_final[(df_final$diff == diff_ & df_final$spp == 1),],
+          #   aes(nit,
+          #       metab,
+          #       group = metab_id),
+          #   span = span_, # lower numbers are less smoothed
+          #   #color = ifelse(spp_ == 0, bogr_color, spco_color),
+          #   color = spco_color,
+          #   se = F
+          # ) +
+          theme_cowplot() +
           xlab(expression(paste("N addition (g ", m ^ {
             -2
           }, ')'))) +
-          ylab("Metabolite abundance") +
-          
-          
+          ylab("Metabolite abundance")
           
         ind_ <- 
           #paste(diff_, spp_)
@@ -144,15 +145,19 @@ gather_nit_plots <-
                          dat_spco = "temp/1_metabolomic_MIC_output_nitrogen.csv",
                          span_ = span_)
     
-    gg <- 
-      nit_plots[[1]] +
-      nit_plots[[2]] +
-      # nit_plots[[3]] +
-      # nit_plots[[4]] +
-      patchwork::plot_layout(ncol = 2, nrow = 2)
-    
-    gg
+    main <-
+      plot_grid(
+        nit_plots[[1]],
+        nit_plots[[2]],
+        nrow = 1,
+        align = "h",
+        labels = c("b","c"),
+        label_size = 18,
+        axis = "l"
+      )
 
+    gg 
+    
     if (!(is.na(filename))) {
       ggsave(file = filename,
              height = 3,
@@ -201,3 +206,6 @@ gather_phys_plots <-
   }
 
 gather_nit_plots(filename = "figures/MIC.pdf", span_ = 0.75)
+
+plot_pca(run_pca()) + guides(colour = guide_legend(override.aes = list(linetype = c(1,1)))) +
+  legend_custom()
