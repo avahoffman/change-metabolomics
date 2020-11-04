@@ -1,13 +1,36 @@
+###########################################################################################
+##
+## Plot Physiological traits
+##
+###########################################################################################
+###########################################################################################
+# Load libraries
 library(dplyr)
 library(ggplot2)
 library(reshape2)
+library(cowplot)
+library(patchwork)
+
+###########################################################################################
 
 
-make_mic_plots <-
-  function(dat) {
+make_mic_plots_nit <-
+  function(dat_bogr, dat_spco, span_ = 1) {
     df_final <-
-      dat %>%
-      filter(pval < 0.0003)
+      
+      # Note on p value cutoff:
+      # if p cutoff is < 0.001, that means for every 2570 metabs,
+      # we expect 2.6 to have a significant relationship by chance
+      #
+      # 2570 total metabolites in our dataset
+      rbind(read.csv(dat_bogr), read.csv(dat_spco)) %>%
+      filter(pval < 0.001)
+    
+    df_unique <- 
+      df_final %>%
+      select(metab_id, spp) %>%
+      distinct() %>%
+      arrange(metab_id)
     
     df_grouped <-
       df_final %>%
@@ -26,38 +49,155 @@ make_mic_plots <-
       df_final %>%
       left_join(df_grouped_cast, by = "metab_id")
     
-    p1 <-
-      ggplot() +
-      stat_smooth(
-        data = df_final[(df_final$diff == "increase"), ],
-        aes(nit,
-            metab,
-            group = metab_id),
-        span = 1,
-        color = "grey",
-        se = F
-      )
+    plotList <- list()
     
-    p2 <-
-      ggplot() +
-      stat_smooth(
-        data = df_final[(df_final$diff == "decrease"), ],
-        aes(nit,
-            metab,
-            group = metab_id),
-        span = 1,
-        color = "grey",
-        se = F
-      )
+    #for (spp_ in c(0, 1)) {
+      for (diff_ in c("increase", "decrease")) {
+        p_ <-
+          ggplot() +
+          stat_smooth(
+            data = df_final[(df_final$diff == diff_ & df_final$spp == 0),],
+            aes(nit,
+                metab,
+                group = metab_id),
+            span = span_, # lower numbers are less smoothed
+            #color = ifelse(spp_ == 0, bogr_color, spco_color),
+            color = bogr_color,
+            se = F
+          ) +
+          stat_smooth(
+            data = df_final[(df_final$diff == diff_ & df_final$spp == 1),],
+            aes(nit,
+                metab,
+                group = metab_id),
+            span = span_, # lower numbers are less smoothed
+            #color = ifelse(spp_ == 0, bogr_color, spco_color),
+            color = spco_color,
+            se = F
+          ) +
+          theme_cowplot()+
+          xlab(expression(paste("N addition (g ", m ^ {
+            -2
+          }, ')'))) +
+          ylab("Metabolite abundance") +
+          
+          
+          
+        ind_ <- 
+          #paste(diff_, spp_)
+          paste(diff_)
+        
+        plotList[[ind_]] = p_
+        
+      }
+   # }
     
-    return(list(p1, p2))
+    return(plotList)
   }
 
-spco_plots <- make_mic_plots(read.csv("temp/1_metabolomic_MIC_output_nitrogen.csv"))
-bogr_plots <- make_mic_plots(read.csv("temp/0_metabolomic_MIC_output_nitrogen.csv"))
 
-spco_plots[[1]] + 
-  spco_plots[[2]] + 
-  bogr_plots[[1]] +
-  bogr_plots[[2]] +
-  patchwork::plot_layout(ncol = 2, nrow = 2)
+make_mic_plots_phys <-
+  function(dat_bogr, dat_spco) {
+    df_final <-
+      
+      # Note on p value cutoff:
+      # if p cutoff is < 0.001, that means for every 2570 metabs,
+      # we expect 2.6 to have a significant relationship by chance
+      #
+      # 2570 total metabolites in our dataset
+      rbind(read.csv(dat_bogr), read.csv(dat_spco)) %>%
+      filter(pval < 0.005)
+    
+    response_var_part <-
+      gsub("temp/0_metabolomic_MIC_output_", "", dat_bogr)
+    response_var <-
+      gsub(".csv", "", response_var_part)
+    
+    plotList <- list()
+    
+    for (spp_ in c(0, 1)) {
+      p_ <-
+        ggplot() +
+        stat_smooth(
+          data = df_final[(df_final$spp == spp_),],
+          aes(get(response_var),
+              metab,
+              group = metab_id),
+          span = 1,
+          color = ifelse(spp_ == 0, bogr_color, spco_color),
+          se = F
+        ) +
+        xlab(response_var)
+      
+      plotList[[spp_ + 1]] <- p_
+      
+    }
+    
+    return(plotList)
+  }
+
+
+gather_nit_plots <- 
+  function(filename = NA, span_ = 1){
+    nit_plots <-
+      make_mic_plots_nit(dat_bogr = "temp/0_metabolomic_MIC_output_nitrogen.csv",
+                         dat_spco = "temp/1_metabolomic_MIC_output_nitrogen.csv",
+                         span_ = span_)
+    
+    gg <- 
+      nit_plots[[1]] +
+      nit_plots[[2]] +
+      # nit_plots[[3]] +
+      # nit_plots[[4]] +
+      patchwork::plot_layout(ncol = 2, nrow = 2)
+    
+    gg
+
+    if (!(is.na(filename))) {
+      ggsave(file = filename,
+             height = 3,
+             width = 4.5)
+    }
+    
+    return(gg)
+  }
+
+
+gather_phys_plots <- 
+  function(filename = NA){
+    cond_plots <-
+      make_mic_plots_phys(dat_bogr = "temp/0_metabolomic_MIC_output_cond.csv",
+                          dat_spco = "temp/1_metabolomic_MIC_output_cond.csv")
+    photo_plots <-
+      make_mic_plots_phys(dat_bogr = "temp/0_metabolomic_MIC_output_photo.csv",
+                          dat_spco = "temp/1_metabolomic_MIC_output_photo.csv")
+    Ci_plots <-
+      make_mic_plots_phys(dat_bogr = "temp/0_metabolomic_MIC_output_Ci.csv",
+                          dat_spco = "temp/1_metabolomic_MIC_output_Ci.csv")
+    iWUE_plots <-
+      make_mic_plots_phys(dat_bogr = "temp/0_metabolomic_MIC_output_iWUE.csv",
+                          dat_spco = "temp/1_metabolomic_MIC_output_iWUE.csv")
+    
+    gg <- 
+      photo_plots[[1]] +
+      photo_plots[[2]] +
+      cond_plots[[1]] +
+      cond_plots[[2]] +
+      Ci_plots[[1]] +
+      Ci_plots[[2]] +
+      iWUE_plots[[1]] +
+      iWUE_plots[[2]] +
+      patchwork::plot_layout(ncol = 2, nrow = 4)
+    
+    gg
+    
+    if (!(is.na(filename))) {
+      ggsave(file = filename,
+             height = 3,
+             width = 4.5)
+    }
+    
+    return(gg)
+  }
+
+gather_nit_plots(filename = "figures/MIC.pdf", span_ = 0.75)
