@@ -16,7 +16,6 @@ phys_plot <-
   function(phys_data,
            trait,
            ylab,
-           grid_label,
            filename = NA,
            fit_line = F) {
     gg <-
@@ -44,15 +43,6 @@ phys_plot <-
       xlab(expression(paste("N addition (g ", m ^ {
         -2
       }, ')'))) +
-      annotate(
-        "text",
-        Inf,
-        Inf,
-        label = grid_label,
-        hjust = 1.1,
-        vjust = 1.1,
-        size = 5
-      ) +
       guides(colour = guide_legend(override.aes = list(shape = c(
         bogr_shape,
         spco_shape
@@ -105,57 +95,75 @@ g_legend <- function(a.gplot) {
 }
 
 
-arrange_phys_plots <- function(){
-  p1 <- 
-    phys_plot(prep_trait_data(), 
-              trait = "photo", 
-              ylab = photo_ylab, 
-              grid_label = "(a)", 
-              fit_line = T)
+arrange_phys_plots <- function() {
+  p1 <-
+    phys_plot(
+      prep_trait_data(),
+      trait = "photo",
+      ylab = photo_ylab,
+      fit_line = T
+    )
   leg <- g_legend(p1)
-  p1 <- 
-    p1 + 
-    theme(legend.position="none",
-          axis.title.x = element_blank(),
-          axis.text.x = element_blank())
-  p2 <- 
-    phys_plot(prep_trait_data(), 
-              trait = "cond", 
-              ylab = cond_ylab, 
-              grid_label = "(b)") +
-    theme(legend.position="none",
-          axis.title.x = element_blank(),
-          axis.text.x = element_blank())
-  p3 <- 
-    phys_plot(prep_trait_data(), 
-              trait = "Ci", 
-              ylab = ci_ylab, 
-              grid_label = "(c)",
-              fit_line = T) +
-    theme(legend.position = "none")
-  p4 <- 
-    phys_plot(prep_trait_data(), 
-              trait = "iWUE", 
-              ylab = iWUE_ylab, 
-              grid_label = "(d)",
-              fit_line = T) +
+  p1 <-
+    p1 +
+    theme(
+      legend.position = "none",
+      axis.title.x = element_blank(),
+      axis.text.x = element_blank()
+    )
+  p2 <-
+    phys_plot(
+      prep_trait_data(),
+      trait = "cond",
+      ylab = cond_ylab
+    ) +
+    theme(
+      legend.position = "none",
+      axis.title.x = element_blank(),
+      axis.text.x = element_blank()
+    )
+  p3 <-
+    phys_plot(
+      prep_trait_data(),
+      trait = "Ci",
+      ylab = ci_ylab,
+      fit_line = T
+    ) +
+    theme(
+      legend.position = "none",
+      axis.title.x = element_blank(),
+      axis.text.x = element_blank()
+    )
+  p4 <-
+    phys_plot(
+      prep_trait_data(),
+      trait = "iWUE",
+      ylab = iWUE_ylab,
+      fit_line = T
+    ) +
     theme(legend.position = "none")
   
   main <-
-    plot_grid(p1,
-              p2,
-              p3,
-              p4,
-              nrow = 2,
-              align = "hv",
-              axis = "bl")
+    plot_grid(
+      p1,
+      p2,
+      p3,
+      p4,
+      nrow = 4,
+      align = "v",
+      labels = "auto",
+      label_size = 18,
+      axis = "l",
+      rel_heights = c(1,1,1,1.2)
+    )
   
-  pdf("figures/physiological_traits.pdf",height=10,width=10)
-  grid.arrange(leg,
-               main,
-               heights = c(1,10),
-               nrow = 2
-               )
+  pdf("figures/physiological_traits.pdf",
+      height = 12,
+      width = 4)
+  grid.arrange(main,
+               leg,
+               heights = c(100, 7),
+               nrow = 2)
   dev.off()
   
 }

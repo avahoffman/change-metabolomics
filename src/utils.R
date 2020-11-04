@@ -220,7 +220,7 @@ theme_sigmaplot <-
 legend_custom <-
   function() {
     obj <- theme(
-      legend.position = "top",
+      legend.position = "bottom",
       legend.direction = "horizontal",
       legend.justification = 0.5,
       legend.title = element_blank()

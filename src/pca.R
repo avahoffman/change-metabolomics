@@ -61,23 +61,22 @@ run_pca <- function() {
 
 plot_pca <- function(combined_data, filename = NA) {
   gg <-
-    ggplot() +
-    geom_point(data = combined_data %>%
-                 filter(!(is.na(
-                   get(pca_component)
-                 ))),
-               aes(
-                 x = nitrogen,
-                 y = get(pca_component),
-                 col = as.factor(spp),
-                 shape = as.factor(spp)
-               )) +
+    ggplot(data = combined_data %>%
+             filter(!(is.na(
+               get(pca_component)
+             ))),
+           aes(
+             x = nitrogen,
+             y = get(pca_component),
+             col = as.factor(spp),
+             shape = as.factor(spp)
+           )) +
+    theme_cowplot() +
     geom_jitter(size = 3,
                 width = 0.2,
                 height = 0) +
     scale_shape_manual(values = c(bogr_shape, spco_shape),
                        guide = F) +
-    theme_cowplot() +
     scale_color_manual(
       values = c(bogr_color,
                  spco_color),
@@ -97,9 +96,11 @@ plot_pca <- function(combined_data, filename = NA) {
   
   if (!(is.na(filename))) {
     ggsave(file = filename,
-           height = 5,
-           width = 5)
+           height = 4,
+           width = 4)
   }
   
   return(gg)
 }
+
+plot_pca(run_pca(), filename = "figures/component_v_N.pdf")
