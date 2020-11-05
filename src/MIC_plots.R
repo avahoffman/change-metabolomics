@@ -26,7 +26,7 @@ make_mic_plots_nit <-
       rbind(read.csv(dat_bogr), read.csv(dat_spco)) %>%
       filter(pval < 0.001)
     
-    df_unique <- 
+    df_unique <-
       df_final %>%
       select(metab_id, spp) %>%
       distinct() %>%
@@ -51,47 +51,40 @@ make_mic_plots_nit <-
     
     plotList <- list()
     
-    # Leaving this relic here for now. Very undecided how I want the plots to look
-    #for (spp_ in c(0, 1)) {
-      for (diff_ in c("increase", "decrease")) {
-        p_ <-
-          ggplot() +
-          stat_smooth(
-            #data = df_final[(df_final$diff == diff_ & df_final$spp == 0),],
-            data = df_final[(df_final$diff == diff_),],
-            aes(nit,
-                metab,
-                color = as.factor(spp),
-                group = metab_id),
-            span = span_, # lower numbers are less smoothed
-            #color = ifelse(spp_ == 0, bogr_color, spco_color),
-            se = F
-          ) +
-          scale_color_manual(values = c(bogr_color, spco_color)) +
-          # stat_smooth(
-          #   data = df_final[(df_final$diff == diff_ & df_final$spp == 1),],
-          #   aes(nit,
-          #       metab,
-          #       group = metab_id),
-          #   span = span_, # lower numbers are less smoothed
-          #   #color = ifelse(spp_ == 0, bogr_color, spco_color),
-          #   color = spco_color,
-          #   se = F
-          # ) +
-          theme_cowplot() +
-          xlab(expression(paste("N addition (g ", m ^ {
-            -2
-          }, ')'))) +
-          ylab("Metabolite abundance")
-          
-        ind_ <- 
-          #paste(diff_, spp_)
-          paste(diff_)
-        
-        plotList[[ind_]] = p_
-        
-      }
-   # }
+    for (diff_ in c("increase", "decrease")) {
+      p_ <-
+        ggplot() +
+        stat_smooth(
+          data = df_final[(df_final$diff == diff_), ],
+          aes(nit,
+              metab,
+              color = as.factor(spp),
+              group = metab_id),
+          span = span_,
+          size = 0.5,
+          # lower numbers are less smoothed
+          se = F
+        ) +
+        scale_color_manual(
+          values = c(bogr_color,
+                     spco_color),
+          labels = c(B.gracilis,
+                     S.coccinea)
+        ) +
+        theme_cowplot() +
+        xlab(expression(paste("N addition (g ", m ^ {
+          -2
+        }, ')'))) +
+        ylab("Metabolite abundance") +
+        legend_custom()
+      
+      ind_ <-
+        paste(diff_)
+      
+      plotList[[ind_]] = p_
+      
+    }
+    # }
     
     return(plotList)
   }
@@ -120,7 +113,7 @@ make_mic_plots_phys <-
       p_ <-
         ggplot() +
         stat_smooth(
-          data = df_final[(df_final$spp == spp_),],
+          data = df_final[(df_final$spp == spp_), ],
           aes(get(response_var),
               metab,
               group = metab_id),
@@ -138,38 +131,45 @@ make_mic_plots_phys <-
   }
 
 
-gather_nit_plots <- 
-  function(filename = NA, span_ = 1){
+gather_nit_plots <-
+  function(filename = NA, span_ = 1) {
     nit_plots <-
       make_mic_plots_nit(dat_bogr = "temp/0_metabolomic_MIC_output_nitrogen.csv",
                          dat_spco = "temp/1_metabolomic_MIC_output_nitrogen.csv",
                          span_ = span_)
     
+    leg <-
+      g_legend(nit_plots[[1]])
+    
     main <-
       plot_grid(
-        nit_plots[[1]],
-        nit_plots[[2]],
+        nit_plots[[1]] + theme(legend.position = "none"),
+        nit_plots[[2]] + theme(legend.position = "none"),
         nrow = 1,
-        align = "h",
-        labels = c("b","c"),
+        align = "vh",
+        labels = c("b", "c"),
         label_size = 18,
         axis = "l"
       )
-
-    gg 
     
     if (!(is.na(filename))) {
-      ggsave(file = filename,
-             height = 3,
-             width = 4.5)
+      pdf(filename,
+          height = 4,
+          width = 16 / 3)
+      grid.arrange(main,
+                   leg,
+                   heights = c(10, 1),
+                   nrow = 2)
+      dev.off()
     }
     
-    return(gg)
+    return(list(main,leg))
+    
   }
 
 
-gather_phys_plots <- 
-  function(filename = NA){
+gather_phys_plots <-
+  function(filename = NA) {
     cond_plots <-
       make_mic_plots_phys(dat_bogr = "temp/0_metabolomic_MIC_output_cond.csv",
                           dat_spco = "temp/1_metabolomic_MIC_output_cond.csv")
@@ -183,7 +183,7 @@ gather_phys_plots <-
       make_mic_plots_phys(dat_bogr = "temp/0_metabolomic_MIC_output_iWUE.csv",
                           dat_spco = "temp/1_metabolomic_MIC_output_iWUE.csv")
     
-    gg <- 
+    gg <-
       photo_plots[[1]] +
       photo_plots[[2]] +
       cond_plots[[1]] +
@@ -204,8 +204,3 @@ gather_phys_plots <-
     
     return(gg)
   }
-
-gather_nit_plots(filename = "figures/MIC.pdf", span_ = 0.75)
-
-plot_pca(run_pca()) + guides(colour = guide_legend(override.aes = list(linetype = c(1,1)))) +
-  legend_custom()

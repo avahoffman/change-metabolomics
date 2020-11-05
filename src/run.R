@@ -4,7 +4,7 @@
 ###########################################################################################
 # Set working directory for the repository (should be the git repo)
 wd <-
-   "/Users/avahoffman/Dropbox/Research/SGS_Metabolomics/Change_2016-17_Nate/change-metabolomics/"
+  "/Users/avahoffman/Dropbox/Research/SGS_Metabolomics/Change_2016-17_Nate/change-metabolomics/"
 setwd(wd)
 
 ###########################################################################################
@@ -22,6 +22,7 @@ source("src/model_on_phys.R")
 source("src/model_on_cover.R")
 source("src/metab_modules.R")
 source("src/sem.R")
+source("src/MIC_plots.R")
 
 ###########################################################################################
 # Run pipeline
@@ -52,3 +53,28 @@ make_module_heatmap()
 
 # SEM
 plot_sem()
+
+# Nitrogen MIC curves
+gather_nit_plots(filename = "figures/MIC.pdf", span_ = 0.75)
+
+# Make a nice combined figure for pub
+pdf("figures/PCA_MIC.pdf",
+    height = 4,
+    width = 8)
+grid.arrange(
+  plot_grid(
+    plot_pca(run_pca()),
+    nrow = 1,
+    labels = c("a"),
+    label_size = 18
+  ),
+  gather_nit_plots(span_ = 0.75)[[1]],
+  gather_nit_plots(span_ = 0.75)[[2]],
+  nrow = 2,
+  layout_matrix =
+    rbind(c(1, 2),
+          c(1, 3)),
+  heights = c(100,11),
+  widths = c(1,2)
+)
+dev.off()
