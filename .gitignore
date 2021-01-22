@@ -44,8 +44,5 @@ vignettes/*.pdf
 # Large Stan results
 *output/stanmodel*
 
-# Publication
-Hoffman*
-
-# Temp summit output folder
+# Other folders
 temp/*
