@@ -48,3 +48,4 @@ vignettes/*.pdf
 temp/*
 sem/*
 archive/*
+data/*.csv
