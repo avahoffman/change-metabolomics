@@ -62,3 +62,6 @@ heatmap_colorpal <-
 # Color palette for the SEM plot
 sem_pos_color <- "#92D741FF"
 sem_neg_color <- "#38598CFF"
+
+# Metabolites from MIC also in module 16
+overlap_metab <- as.factor(c("V224","V713"))

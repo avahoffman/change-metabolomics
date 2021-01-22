@@ -17,7 +17,6 @@ library(patchwork)
 make_mic_plots_nit <-
   function(dat_bogr, dat_spco, span_ = 1) {
     df_final <-
-      
       # Note on p value cutoff:
       # if p cutoff is < 0.001, that means for every 2570 metabs,
       # we expect 2.6 to have a significant relationship by chance
@@ -55,13 +54,26 @@ make_mic_plots_nit <-
       p_ <-
         ggplot() +
         stat_smooth(
-          data = df_final[(df_final$diff == diff_), ],
+          data = df_final[(df_final$diff == diff_ & (!(df_final$metab_id %in% overlap_metab))), ],
           aes(nit,
               metab,
               color = as.factor(spp),
               group = metab_id),
           span = span_,
           size = 0.5,
+          lty = 1,
+          # lower numbers are less smoothed
+          se = F
+        ) +
+        stat_smooth(
+          data = df_final[(df_final$diff == diff_ & df_final$metab_id %in% overlap_metab), ],
+          aes(nit,
+              metab,
+              color = as.factor(spp),
+              group = metab_id),
+          span = span_,
+          size = 0.5,
+          lty = 2,
           # lower numbers are less smoothed
           se = F
         ) +
