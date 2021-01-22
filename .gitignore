@@ -46,3 +46,5 @@ vignettes/*.pdf
 
 # Other folders
 temp/*
+sem/*
+archive/*
