@@ -49,3 +49,5 @@ temp/*
 sem/*
 archive/*
 data/*.csv
+output/*.csv
+output/*.pdf
