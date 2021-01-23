@@ -1,10 +1,15 @@
 Please download data from Figshare and place it in this directory :)
 
 **Required:**
-SpecAbund_design.csv		
-SpecAbund_metabolites.csv	
-phys_metabs_for_modules.csv
+
+SpecAbund_design.csv  	
+
+SpecAbund_metabolites.csv	 
+
+phys_metabs_for_modules.csv 
 
 **Optional (already-been-cleaned):**
+
 clean_SpecAbund_metabolites.csv
+
 clean_SpecAbund_design.csv
