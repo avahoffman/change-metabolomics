@@ -46,9 +46,9 @@ make_module_heatmap()
 gather_nit_plots(filename = "figures/MIC.pdf", span_ = 0.75)
 
 # Make a nice combined figure for pub
-pdf("figures/PCA_MIC.pdf",
-    height = 4,
-    width = 8)
+png("figures/PCA_MIC.png",
+    height = 400,
+    width = 800)
 grid.arrange(
   plot_grid(
     plot_pca(run_pca()),
