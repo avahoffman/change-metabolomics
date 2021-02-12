@@ -4,14 +4,18 @@
 ###########################################################################################
 # Set working directory for the repository (should be the git repo)
 wd <-
-  "/Users/avahoffman/Dropbox/Research/SGS_Metabolomics/Change_2016-17_Nate/change-metabolomics/"
+  here() # Replace with manual git repo path if desired, e.g. 
+         # "/Users/me/change-metabolomics/"
+
 setwd(wd)
 
 ###########################################################################################
 # Load sources
+
 # General functions and configuration
 source("src/config.R")
 source("src/utils.R")
+
 # Specific functions
 source("src/clean.R")
 source("src/pca.R")
