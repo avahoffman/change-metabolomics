@@ -4,11 +4,14 @@
 # Data processing
 
 prep_trait_data <- function() {
+  # This function reads in the physiological data (one data point per plant)
+  
   phys_data <-
     read.csv("data/clean_SpecAbund_design.csv") %>%
     filter(!(is.na(photo))) %>%
     filter(!(X == "A2_Bogr")) %>% # all zeros, not helpful datapoint
     mutate(iWUE = photo / cond) # generate new variable for water use efficiency
+  
   return(phys_data)
 }
 
@@ -26,24 +29,24 @@ plot_main_effects <-  function(fit, name, interaction = T) {
     dimnames(posterior)$parameters <-
       gsub("B1", "Species effect", dimnames(posterior)$parameters)
     dimnames(posterior)$parameters <-
-      gsub("B3", "Interaction effect", dimnames(posterior)$parameters)
+      gsub("B3",
+           "Interaction effect",
+           dimnames(posterior)$parameters)
   }
   
   # Plot species, nitrogen, and interaction effect
-  if (interaction){
+  if (interaction) {
     pars = c("Species effect",
              "Nitrogen effect",
              "Interaction effect")
   } else {
     pars = c("Nitrogen effect")
   }
-  pars <- 
-  param_plot <-
-    mcmc_dens(
-      posterior,
-      pars = pars,
-      facet_args = list(ncol = 1)
-    ) +
+  pars <-
+    param_plot <-
+    mcmc_dens(posterior,
+              pars = pars,
+              facet_args = list(ncol = 1)) +
     geom_vline(xintercept = 0, lty = 3) +
     theme_minimal(base_size = 20) +
     theme(axis.text.y = element_blank(),
@@ -80,34 +83,34 @@ write_model_statistics <-
     # Retain only stats for parameters
     if (mixture & interaction) {
       Pr_vals <-
-        rbind(model_stats["intercept[1]", ],
-              model_stats["intercept[2]", ],
-              model_stats["B1", ],
-              model_stats["B2", ],
-              model_stats["B3", ])
-    } else if (!(interaction)) {
-      if (mixture) {
-        Pr_vals <-
-          rbind(model_stats["intercept[1]",],
-                model_stats["intercept[2]",],
-                model_stats["B2",])
-      } else {
-        Pr_vals <- rbind(model_stats["B0",],
-                         model_stats["B2",])
-      }
-    } else {
-      Pr_vals <-
-        rbind(model_stats["B0",],
+        rbind(model_stats["intercept[1]",],
+              model_stats["intercept[2]",],
               model_stats["B1",],
               model_stats["B2",],
               model_stats["B3",])
+    } else if (!(interaction)) {
+      if (mixture) {
+        Pr_vals <-
+          rbind(model_stats["intercept[1]", ],
+                model_stats["intercept[2]", ],
+                model_stats["B2", ])
+      } else {
+        Pr_vals <- rbind(model_stats["B0", ],
+                         model_stats["B2", ])
+      }
+    } else {
+      Pr_vals <-
+        rbind(model_stats["B0", ],
+              model_stats["B1", ],
+              model_stats["B2", ],
+              model_stats["B3", ])
     }
-    Pr_vals <- Pr_vals[,-4] # Drop rhat for calculating Pr
+    Pr_vals <- Pr_vals[, -4] # Drop rhat for calculating Pr
     Pr_calc <- as.data.frame(NULL)
     # Iterate through parameters
     for (r in 1:nrow(Pr_vals)) {
-      max_ <- max(Pr_vals[r,])
-      min_ <- min(Pr_vals[r,])
+      max_ <- max(Pr_vals[r, ])
+      min_ <- min(Pr_vals[r, ])
       # Calculate the proportion of overlap on zero
       if (max_ < 0 & min_ < 0) {
         pr. <- 1
@@ -145,7 +148,7 @@ plot_posterior_checks <- function(fit, responsevar, name) {
   list_of_draws <- rstan::extract(fit)
   yrep <- list_of_draws$draws1
   # Two ways to plot actual and modeled data
-  np1 <- ppc_dens_overlay(responsevar, yrep[1:400, ]) +
+  np1 <- ppc_dens_overlay(responsevar, yrep[1:400,]) +
     theme_minimal(base_size = 20) +
     xlab(name)
   ggsave(np1,
@@ -219,6 +222,10 @@ theme_sigmaplot <-
 
 legend_custom <-
   function() {
+    # This function adds my custom legend to a ggplot object.
+    # Use as an additional arg, eg:
+    # ggplot() + legend_custom()
+    
     obj <- theme(
       legend.position = "bottom",
       legend.direction = "horizontal",
@@ -231,6 +238,9 @@ legend_custom <-
 
 
 g_legend <- function(a.gplot) {
+  # This functions gets the legend object from a ggplot
+  # a.gplot: the ggplot object from which you are extracting the legend
+
   tmp <-
     ggplot_gtable(ggplot_build(a.gplot))
   leg <-
