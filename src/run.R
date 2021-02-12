@@ -3,6 +3,7 @@
 
 ###########################################################################################
 # Set working directory for the repository (should be the git repo)
+library(here)
 wd <-
   here() # Replace with manual git repo path if desired, e.g. 
          # "/Users/me/change-metabolomics/"
