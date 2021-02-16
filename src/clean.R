@@ -20,11 +20,11 @@ library(sva) ## batch correction on raw data
 clean_design_and_metabolites <- function() {
   
   # Read and clean design
-  if (!(file.exists("data/clean_SpecAbund_design.csv"))) {
+  if (!(file.exists(clean_design_file))) {
     
     # Load design
     metab_design <-
-      read.csv(file = "data/SpecAbund_design.csv", header = T) %>%
+      read.csv(file = design_file, header = T) %>%
       mutate(X = as.character(X)) %>%
       
       # The below sample is an outlier in preliminary pca analysis..
@@ -36,15 +36,15 @@ clean_design_and_metabolites <- function() {
       mutate(X = replace(X, X == "C28_Bogr", "D28_Bogr"))
     
     # Write clean data
-    write.csv(metab_design, file = "data/clean_SpecAbund_design.csv")
+    write.csv(metab_design, file = clean_design_file)
   }
   
   # Read and clean metabolites
-  if (!(file.exists("data/clean_SpecAbund_metabolites.csv"))) {
+  if (!(file.exists(clean_metab_file))) {
     
     # Load metabolites
     metab_data <-
-      read.csv(file = "data/SpecAbund_metabolites.csv",
+      read.csv(file = metab_file,
                header = T,
                row.names = 1) %>%
       
@@ -58,7 +58,7 @@ clean_design_and_metabolites <- function() {
     
     # Load design
     metab_design <-
-      read.csv(file = "data/clean_SpecAbund_design.csv", header = T)
+      read.csv(file = clean_design_file, header = T)
     
     # Independent vars
     pheno <- metab_design[, 1:5]
@@ -80,7 +80,7 @@ clean_design_and_metabolites <- function() {
     )
     
     # Rewrite data
-    write.csv(combat_metabolite_data, file = "data/clean_SpecAbund_metabolites.csv")
+    write.csv(combat_metabolite_data, file = clean_metab_file)
   }
   
 }

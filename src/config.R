@@ -2,6 +2,13 @@
 
 ###########################################################################################
 
+# Files
+
+design_file <- "data/SpecAbund_design.csv"
+clean_design_file <- "data/clean_SpecAbund_design.csv"
+metab_file <- "data/SpecAbund_metabolites.csv"
+clean_metab_file <- "data/clean_SpecAbund_metabolites.csv"
+
 # PCA plotting
 
 # Which PC component should be used? Choose PC1, PC2, or PC3
